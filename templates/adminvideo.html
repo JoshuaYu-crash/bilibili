@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>视频管理</title>
+    <style>
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>编号</th>
+        <th>标题</th>
+        <th>分区</th>
+        <th>封面</th>
+        <th>作者</th>
+        <th>点赞</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for v in page_data.items %}
+    <tr>
+        <td>{{ v.id }}</td>
+        <td><a href="{{ url_for("AdminComment", admin=admin, id=v.id, page=1) }}">{{ v.name }}</a></td>
+        <td>{{  v.tag.name }}</td>
+        <td><img src="/static/upload/{{ v.logo }}" style="height: 80px"></td>
+        <td>{{ v.user.name }}</td>
+        <td>{{ v.like }}</td>
+        <td><a href="{{ url_for("AdminViodeoDelete", admin=admin, id=v.id) }}">删除</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<ul>
+    <li><a href="{{ url_for("AdminVideo", admin=admin, page=1) }}">首页</a></li>
+    {% if page_data.has_prev %}
+        <li><a href="{{ url_for("AdminVideo", admin=admin, page=page_data.prev_num) }}">上一页</a></li>
+    {% else %}
+        <li><a href="#">上一页</a></li>
+    {% endif %}
+    {% for v in page_data.iter_pages() %}
+        {% if v == page_data.page %}
+            <li><a href="#">{{ v }}</a></li>
+        {% else %}
+            <li><a href="{{ url_for("AdminVideo", admin=admin,page=v ) }}">{{ v }}</a></li>
+        {% endif %}
+    {% endfor %}
+    {% if page_data.has_next %}
+        <li><a href="{{ url_for("AdminVideo", admin=admin, page=page_data.next_num) }}">下一页</a></li>
+    {% else %}
+        <li><a href="#">下一页</a></li>
+    {% endif %}
+    <li><a href="{{ url_for("AdminVideo", admin=admin, page=page_data.pages) }}">尾页</a></li>
+</ul>
+</body>
+</html>

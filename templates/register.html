@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>bilibili注册</title>
+</head>
+<body>
+<h1>注册新用户</h1>
+<fieldset>
+    <legend>注册</legend>
+    <form method="POST">
+        {{ form.csrf_token() }}
+        {{ form.username.label }}{{ form.username }}<br>
+        {% for error in form.username.errors %}
+            <small style="color: red">{{ error }}</small>
+        {% endfor %}<br>
+        {{ form.password.label }}{{ form.password }}<br>
+        {% for error in form.repassword.errors %}
+            <small style="color: red">{{ error }}</small>
+        {% endfor %}<br>
+        {{ form.repassword.label }}{{ form.repassword }}<br>
+        {% for error in form.repassword.errors %}
+            <small style="color: red">{{ error }}</small>
+        {% endfor %}<br>
+        {{ form.email.label }}{{ form.email }}<br>
+        {% for error in form.email.errors %}
+            <small style="color: red">{{ error }}</small>
+        {% endfor %}<br>
+        {{ form.phone.label }}{{ form.phone }}<br>
+        {% for error in form.phone.errors %}
+            <small style="color: red">{{ error }}</small>
+        {% endfor %}<br>
+        {% for message in get_flashed_messages() %}
+        <small style="color: red">{{ message }}</small>
+        {% endfor %}<br>
+        {{ form.submit }}<br>
+        </form>
+</fieldset>
+</body>
+</html>

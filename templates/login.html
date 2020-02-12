@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>bilibili</title>
+</head>
+<body>
+<h1>请先完成登录</h1>
+<form method="POST">
+    {{ form.csrf_token() }}
+    {{ form.username.label }}{{ form.username }}<br>
+    {% for error in form.username.errors %}
+        <small style="color: red">{{ error }}</small>
+    {% endfor %}<br>
+    {{ form.password.label }}{{ form.password }}<br>
+    {% for error in form.password.errors %}
+        <small style="color: red">{{ error }}</small>
+    {% endfor %}<br>
+    {% for message in get_flashed_messages() %}
+    <small style="color: red">{{ message }}</small>
+    {% endfor %}<br>
+    {{ form.submit }}<br>
+</form>
+<nav><a href="{{ url_for("Register") }}">注册</a>  <a href="{{ url_for('AdminLogin') }}">管理员登录</a></nav>
+</body>
+</html>

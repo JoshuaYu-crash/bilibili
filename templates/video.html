@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ video.name }}</title>
+</head>
+<style>
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+        }
+        #dplayer {
+            max-width: 960px;
+            height: 620px;
+        }
+    </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dplayer@1.25.0/dist/DPlayer.min.css">
+<body>
+<a href="{{ url_for("Index", user=name, page=1) }}">首页</a><br>
+
+<div id="dplayer"></div>
+<script src="https://cdn.jsdelivr.net/npm/dplayer@1.25.0/dist/DPlayer.min.js"></script>
+<script>
+    const dp = new DPlayer({
+    container: document.getElementById('dplayer'),
+    autoplay: false,
+    theme: '#fa7ca4',
+    loop: false,
+    lang: 'zh-cn',
+    screenshot: true,
+    hotkey: true,
+    preload: 'auto',
+    logo: '/static/test.png',
+    volume: 0.7,
+    mutex: true,
+    video: {
+        url: '/static/upload/{{ video.url }}',
+        pic: '/static/upload/{{ video.logo }}',
+        thumbnails: '/static/upload/{{ video.logo }}',
+        type: 'auto',
+    },
+    danmaku: {
+        id: '{{ video.id }}',
+        api: '/dm/'
+    }
+
+});
+</script>
+<span>点赞量：{{ video.like }}</span><br>
+<a href="{{ url_for("Like", user=name, id=video.id) }}">点赞</a> {% if collect_check %}
+<a href="{{ url_for("VideoCollect", user=name, id=video.id) }}">收藏</a>
+    {% else %}
+     <span>已收藏</span>
+{% endif %}
+<hr>
+{#评论区#}
+<form method="POST">
+    {{ form.csrf_token() }}
+    {{ form.content.label }}{{ form.content }}
+    {% for err in form.content.errors %}
+    <small style="color: red">{{ err }}</small>
+    {% endfor %}
+    {{ form.submit }}
+</form>
+<hr>
+<table>
+    <thead>
+    <tr>
+        <th>用户</th>
+        <th>头像</th>
+        <th>时间</th>
+        <th>评论</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for v in page_data.items %}
+    <tr>
+        <td>{% if video.video_id == v.user.id %}
+                <span>{{ v.user.name }}(up)</span>
+            {% else %}
+                <span>{{ v.user.name }}</span>
+            {% endif %}
+        </td>
+        <td>{% if v.user.avatar %}
+            <img src="/static/upload/{{ v.user.avatar }}" style="height: 80px">
+        {% else %}
+            <img src="/static/test.png" alt="">
+        {% endif %}</td>
+        <td>{{ v.time }}</td>
+        <td>{{ v.content }}</td>
+        <td>{% if name == v.user.name %}
+            <a href="{{ url_for("CommentDelete", user=name, id=v.id) }}" style="color: red">删除</a>
+            {% else %}
+            <span>无</span>
+        {% endif %}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<ul>
+    <li><a href="{{ url_for("VideoPlay", user=name, id=video.id, page=1) }}">首页</a></li>
+    {% if page_data.has_prev %}
+        <li><a href="{{ url_for("VideoPlay", user=name, id=video.id, page=page_data.prev_num) }}">上一页</a></li>
+    {% else %}
+        <li><a href="#">上一页</a></li>
+    {% endif %}
+    {% for v in page_data.iter_pages() %}
+        {% if v == page_data.page %}
+            <li><a href="#">{{ v }}</a></li>
+        {% else %}
+            <li><a href="{{ url_for("VideoPlay", user=name, id=video.id, page=v ) }}">{{ v }}</a></li>
+        {% endif %}
+    {% endfor %}
+    {% if page_data.has_next %}
+        <li><a href="{{ url_for("VideoPlay", user=name, id=video.id, page=page_data.next_num) }}">下一页</a></li>
+    {% else %}
+        <li><a href="#">下一页</a></li>
+    {% endif %}
+    <li><a href="{{ url_for("VideoPlay", user=name, id=video.id, page=page_data.pages) }}">尾页</a></li>
+</ul>
+</body>
+</html>

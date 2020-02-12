@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>bilibili视频上传</title>
+</head>
+<body>
+<fieldset>
+<legend>视频上传</legend>
+     <form method="POST" enctype="multipart/form-data">
+        {{ form.csrf_token() }}<br>
+        {{ form.name.label }}{{ form.name }}<br>
+        {% for error in form.name.errors %}
+            <small style="color: red">{{ error }}</small><br>
+        {% endfor %}
+        {{ form.url.label }}{{ form.url }}<br>
+        {% for error in form.url.errors %}
+            <small style="color: red">{{ error }}</small><br>
+        {% endfor %}
+        {{ form.logo.label }}{{ form.logo }}<br>
+        {% for error in form.logo.errors %}
+            <small style="color: red">{{ error }}</small><br>
+        {% endfor %}
+        {{ form.tag_id.label }}{{ form.tag_id }}<br>
+        {% for error in form.tag_id.errors %}
+            <small style="color: red">{{ error }}</small><br>
+        {% endfor %}
+        {{ form.info.label }}{{ form.info }}<br>
+        {% for error in form.info.errors %}
+            <small style="color: red">{{ error }}</small><br>
+        {% endfor %}
+        {% for message in get_flashed_messages() %}
+            <small style="color: red">{{ message }}</small>
+        {% endfor %}
+         {{ form.submit }}<br>
+     </form>
+</fieldset>
+</body>
+</html>

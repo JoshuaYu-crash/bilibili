@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ name }}的个人空间</title>
+    <style>
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>你好{{ name }}</h1>
+        {% if usermessage.avatar %}
+            <img src="/static/upload/{{ usermessage.avatar }}" style="height: 80px">
+        {% else %}
+            <img src="/static/test.png" alt="">
+        {% endif %}
+<nav><a href="{{ url_for("Index", user=name, page=1) }}">首页</a> <a href="{{ url_for("Space", user=name, page=1) }}">收藏</a> <a href="{{ url_for("VideoUploaded", user=name, page=1) }}">已上传视频</a> <a href="{{ url_for("UserChange", user=name) }}">信息修改</a> <a href="{{ url_for("Password",user=name) }}">密码修改</a></nav>
+<hr>
+<h1>收藏</h1>
+<table>
+    <thead>
+    <tr>
+        <th>编号</th>
+        <th>标题</th>
+        <th>封面</th>
+        <th>作者</th>
+        <th>点赞</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for v in page_data.items %}
+    <tr>
+        <td>{{ v.video.id }}</td>
+        <td><a href="{{ url_for("VideoPlay", user=name, id=v.video.id, page=1) }}">{{ v.video.name }}</a></td>
+        <td><img src="/static/upload/{{ v.video.logo }}" style="height: 80px"></td>
+        <td>{{ v.user.name }}</td>
+        <td>{{ v.video.like }}</td>
+        <td><a href="{{ url_for("CollectDelete", user=name, page=1, id=v.id) }}">删除</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<ul>
+    <li><a href="{{ url_for("Index", user=name, page=1) }}">首页</a></li>
+    {% if page_data.has_prev %}
+        <li><a href="{{ url_for("Index", user=name, page=page_data.prev_num) }}">上一页</a></li>
+    {% else %}
+        <li><a href="#">上一页</a></li>
+    {% endif %}
+    {% for v in page_data.iter_pages() %}
+        {% if v == page_data.page %}
+            <li><a href="#">{{ v }}</a></li>
+        {% else %}
+            <li><a href="{{ url_for("Index", user=name,page=v ) }}">{{ v }}</a></li>
+        {% endif %}
+    {% endfor %}
+    {% if page_data.has_next %}
+        <li><a href="{{ url_for("Index", user=name, page=page_data.next_num) }}">下一页</a></li>
+    {% else %}
+        <li><a href="#">下一页</a></li>
+    {% endif %}
+    <li><a href="{{ url_for("Index", user=name, page=page_data.pages) }}">尾页</a></li>
+</ul>
+</body>
+</html>

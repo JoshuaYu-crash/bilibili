@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>信息修改</title>
+</head>
+<body>
+    <h1>你好{{ name }}</h1>
+        {% if usermessage.avatar %}
+            <img src="/static/upload/{{ usermessage.avatar }}" style="height: 80px">
+        {% else %}
+            <img src="/static/test.png" alt="">
+        {% endif %}
+<nav><a href="{{ url_for("Index", user=name, page=1) }}">首页</a> <a href="{{ url_for("Space", user=name, page=1) }}">收藏</a> <a href="{{ url_for("VideoUploaded", user=name, page=1) }}">已上传视频</a> <a href="{{ url_for("UserChange", user=name) }}">信息修改</a> <a href="{{ url_for("Password",user=name) }}">密码修改</a></nav>
+    <hr>
+    <fieldset>
+        <legend>修改信息</legend>
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.csrf_token() }}<br>
+            {{ form.avatar.label }}{{ form.avatar }}<br>
+            {{ form.username.label }}{{ form.username }}<br>
+            {% for error in form.username.errors %}
+                <small style="color: red">{{ error }}</small>
+            {% endfor %}<br>
+            {{ form.email.label }}{{ form.email }}<br>
+            {% for error in form.email.errors %}
+                <small style="color: red">{{ error }}</small>
+            {% endfor %}<br>
+            {{ form.phone.label }}{{ form.phone }}<br>
+            {% for error in form.phone.errors %}
+                <small style="color: red">{{ error }}</small>
+            {% endfor %}<br>
+            {{ form.info.label }}{{ form.info }}<br>
+            {{ form.submit }}<br>
+            {% for message in get_flashed_messages() %}
+                <small style="color: red">{{ message }}</small>
+            {% endfor %}
+        </form>
+    </fieldset>
+</body>
+</html>

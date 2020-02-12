@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>评论管理</title>
+    <style>
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+        }
+        #dplayer {
+            max-width: 960px;
+            height: 620px;
+        }
+    </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dplayer@1.25.0/dist/DPlayer.min.css">
+</head>
+<body>
+<a href="{{ url_for("AdminVideo", admin=admin, page=1) }}">返回</a>
+<div id="dplayer"></div>
+<script src="https://cdn.jsdelivr.net/npm/dplayer@1.25.0/dist/DPlayer.min.js"></script>
+<script>
+    const dp = new DPlayer({
+    container: document.getElementById('dplayer'),
+    autoplay: false,
+    theme: '#fa7ca4',
+    loop: false,
+    lang: 'zh-cn',
+    screenshot: true,
+    hotkey: true,
+    preload: 'auto',
+    logo: '/static/test.png',
+    volume: 0.7,
+    mutex: true,
+    video: {
+        url: '/static/upload/{{ video.url }}',
+        pic: '/static/upload/{{ video.logo }}',
+        thumbnails: '/static/upload/{{ video.logo }}',
+        type: 'auto',
+    },
+    danmaku: {
+        id: '{{ video.id }}',
+        api: '/dm/'
+    }
+
+});
+</script>
+<span>点赞量：{{ video.like }}</span> <a href="{{ url_for("AdminLike", admin=admin, id=video.id) }}">清零</a><br>
+<table>
+    <thead>
+    <tr>
+        <th>用户</th>
+        <th>头像</th>
+        <th>时间</th>
+        <th>评论</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for v in page_data.items %}
+    <tr>
+        <td><span>{{ v.user.name }}</span></td>
+        <td>{% if v.user.avatar %}
+            <img src="/static/upload/{{ v.user.avatar }}" style="height: 80px">
+        {% else %}
+            <img src="/static/test.png" alt="">
+        {% endif %}</td>
+        <td>{{ v.time }}</td>
+        <td>{{ v.content }}</td>
+        <td><a href="{{ url_for("AdminCommentDelete", admin=admin, id=v.id) }}" style="color: red">删除</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<ul>
+    <li><a href="{{ url_for("AdminComment",admin=admin, id=video.id, page=1) }}">首页</a></li>
+    {% if page_data.has_prev %}
+        <li><a href="{{ url_for("AdminComment", admin=admin, id=video.id, page=page_data.prev_num) }}">上一页</a></li>
+    {% else %}
+        <li><a href="#">上一页</a></li>
+    {% endif %}
+    {% for v in page_data.iter_pages() %}
+        {% if v == page_data.page %}
+            <li><a href="#">{{ v }}</a></li>
+        {% else %}
+            <li><a href="{{ url_for("AdminComment", admin=admin, id=video.id, page=v ) }}">{{ v }}</a></li>
+        {% endif %}
+    {% endfor %}
+    {% if page_data.has_next %}
+        <li><a href="{{ url_for("AdminComment", admin=admin, id=video.id, page=page_data.next_num) }}">下一页</a></li>
+    {% else %}
+        <li><a href="#">下一页</a></li>
+    {% endif %}
+    <li><a href="{{ url_for("AdminComment", admin=admin, id=video.id, page=page_data.pages) }}">尾页</a></li>
+</ul>
+</body>
+</html>
