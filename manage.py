@@ -677,7 +677,7 @@ def Space(user,page=None):
         # Video.id == Collect.video_id,
          usermessage.id == Collect.user_id
     ).paginate(page=page, per_page=10)
-    return render_template("space.html",name=user, usermessage=usermessage, page_data=page_data)
+    return render_template("space.html", name=user, usermessage=usermessage, page_data=page_data)
 
 
 # 已上传视频
@@ -741,7 +741,7 @@ def Password(user):
                 flash("两次密码输入不一致")
         else:
             flash("原密码错误")
-    return render_template("password.html",form=form, name=user, usermessage=usermessage)
+    return render_template("password.html", form=form, name=user, usermessage=usermessage)
 
 
 # 信息修改
